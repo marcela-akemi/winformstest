@@ -21,10 +21,48 @@ namespace WinFormsApp1
             CarregarDadosAsync();
         }
 
+        string connectionString = "Server=DESKTOP-BLATUSV\\SQLEXPRESS;Database=db1; Integrated Security = True";
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                if (dataGridView1.Columns[e.ColumnIndex].Name == "Flag")
+                {
+                    bool newValue = (bool)dataGridView1.Rows[e.RowIndex].Cells["Flag"].Value;
 
+                    int id = (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value;
+                    AtualizaValorFlag(id, newValue);
+                }
+            }
         }
+
+        private void AtualizaValorFlag(int id, bool newValue)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand(AtualizaDadosTabelaBlock(), conn))
+                {
+                    cmd.Parameters.AddWithValue("@NewValue", newValue);
+                    cmd.Parameters.AddWithValue("ID", id);
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        private string AtualizaDadosTabelaBlock()
+        {
+            string query = $@"UPDATE [dbo].[winforms]
+                           SET 
+                           [flag] = @NewValue
+                             WHERE id = @ID";
+
+            return query;
+        }
+
+
 
         private async void ImportarCSVbtn_Click(object sender, EventArgs e)
         {

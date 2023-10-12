@@ -67,13 +67,12 @@
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(5, 57);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowTemplate.Height = 29;
             dataGridView1.ShowEditingIcon = false;
             dataGridView1.Size = new Size(948, 496);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.CellValueChanged += dataGridView1_CellContentClick;
             // 
             // Id
             // 
@@ -81,7 +80,6 @@
             Id.DataPropertyName = "id";
             Id.HeaderText = "ID";
             Id.Name = "Id";
-            Id.ReadOnly = true;
             Id.Width = 49;
             // 
             // Data
@@ -89,14 +87,12 @@
             Data.DataPropertyName = "data";
             Data.HeaderText = "Data";
             Data.Name = "Data";
-            Data.ReadOnly = true;
             // 
             // Flag
             // 
             Flag.DataPropertyName = "flag";
             Flag.HeaderText = "Flag";
             Flag.Name = "Flag";
-            Flag.ReadOnly = true;
             // 
             // ImportarCSVbtn
             // 
