@@ -228,10 +228,10 @@ namespace WinFormsApp1
             using (frmPopup formPopup = new frmPopup())
             {
                 DialogResult result = formPopup.ShowDialog();
-                if (formPopup.DialogResult != DialogResult.None)
+                if (formPopup.DialogResult == DialogResult.OK)
                 {
                     CarregarDadosAsync();
-                } 
+                }
             }
 
             return;

@@ -39,7 +39,7 @@ namespace WinFormsApp1
 
             this.Close();
 
-            
+
         }
 
         private void addCancelarBtn_Click(object sender, EventArgs e)

@@ -81,6 +81,7 @@
             // 
             // AdicionatBtn
             // 
+            AdicionatBtn.DialogResult = DialogResult.OK;
             AdicionatBtn.Location = new Point(177, 235);
             AdicionatBtn.Name = "AdicionatBtn";
             AdicionatBtn.Size = new Size(99, 31);
@@ -91,6 +92,7 @@
             // 
             // addCancelarBtn
             // 
+            addCancelarBtn.DialogResult = DialogResult.Cancel;
             addCancelarBtn.Location = new Point(51, 235);
             addCancelarBtn.Name = "addCancelarBtn";
             addCancelarBtn.Size = new Size(99, 31);
