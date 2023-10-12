@@ -72,7 +72,8 @@
             dataGridView1.ShowEditingIcon = false;
             dataGridView1.Size = new Size(948, 496);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellValueChanged += dataGridView1_CellContentClick;
+            dataGridView1.CellValueChanged += dataGridView1_CellValueChangedAsync;
+            dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
             // 
             // Id
             // 

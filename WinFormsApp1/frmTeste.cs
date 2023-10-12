@@ -22,7 +22,7 @@ namespace WinFormsApp1
         }
 
         string connectionString = "Server=DESKTOP-BLATUSV\\SQLEXPRESS;Database=db1; Integrated Security = True";
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void dataGridView1_CellValueChangedAsync(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
@@ -31,12 +31,12 @@ namespace WinFormsApp1
                     bool newValue = (bool)dataGridView1.Rows[e.RowIndex].Cells["Flag"].Value;
 
                     int id = (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value;
-                    AtualizaValorFlag(id, newValue);
+                    await AtualizaValorFlag(id, newValue);
                 }
             }
         }
 
-        private void AtualizaValorFlag(int id, bool newValue)
+        private async Task AtualizaValorFlag(int id, bool newValue)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -172,5 +172,26 @@ namespace WinFormsApp1
                 }
             }
         }
+
+        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                ; dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+        //private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    if (dataGridView1.Columns[e.ColumnIndex].Name == "Flag")
+        //    {
+        //        if (dataGridView1.Columns[e.ColumnIndex].Name == "Flag")
+        //        {
+        //            bool newValue = (bool)dataGridView1.Rows[e.RowIndex].Cells["Flag"].Value;
+
+        //            int id = (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value;
+        //            await AtualizaValorFlag(id, newValue);
+        //        }
+        //    }
+        //}
     }
 }
