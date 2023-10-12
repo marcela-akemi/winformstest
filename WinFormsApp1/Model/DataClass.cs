@@ -14,5 +14,10 @@ namespace WinFormsApp1.Model
        
         public string? data { get; set; }
         public string flag { get; set; }
+
+        public static implicit operator DataGridViewRow(DataClass v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

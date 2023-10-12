@@ -18,52 +18,47 @@ namespace WinFormsApp1
         public frmTeste()
         {
             InitializeComponent();
+
             CarregarDadosAsync();
         }
 
         string connectionString = "Server=DESKTOP-BLATUSV\\SQLEXPRESS;Database=db1; Integrated Security = True";
-        private async void dataGridView1_CellValueChangedAsync(object sender, DataGridViewCellEventArgs e)
+
+        private Task CarregarDadosAsync()
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            string connectionString = "Server=DESKTOP-BLATUSV\\SQLEXPRESS;Database=db1; Integrated Security = True";
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+
+            try
             {
-                if (dataGridView1.Columns[e.ColumnIndex].Name == "Flag")
+                sqlConnection.Open();
+
+                string query = "SELECT * FROM dbo.winforms order by id desc";
+
+                DataTable dadosTabela = new DataTable();
+
+                using (SqlCommand cmd = new SqlCommand(query, sqlConnection))
                 {
-                    bool newValue = (bool)dataGridView1.Rows[e.RowIndex].Cells["Flag"].Value;
-
-                    int id = (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value;
-                    await AtualizaValorFlag(id, newValue);
-                }
-            }
-        }
-
-        private async Task AtualizaValorFlag(int id, bool newValue)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                using (SqlCommand cmd = new SqlCommand(AtualizaDadosTabelaBlock(), conn))
-                {
-                    cmd.Parameters.AddWithValue("@NewValue", newValue);
-                    cmd.Parameters.AddWithValue("ID", id);
-                    cmd.ExecuteNonQuery();
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(dadosTabela);
                 }
 
+
+                dataGridView1.DataSource = dadosTabela;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return Task.FromException(ex);
+
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+
+            return Task.CompletedTask;
         }
-
-        private string AtualizaDadosTabelaBlock()
-        {
-            string query = $@"UPDATE [dbo].[winforms]
-                           SET 
-                           [flag] = @NewValue
-                             WHERE id = @ID";
-
-            return query;
-        }
-
-
-
         private async void ImportarCSVbtn_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -104,40 +99,6 @@ namespace WinFormsApp1
             }
             await CarregarDadosAsync();
         }
-
-        private async Task CarregarDadosAsync()
-        {
-            string connectionString = "Server=DESKTOP-BLATUSV\\SQLEXPRESS;Database=db1; Integrated Security = True";
-            SqlConnection sqlConnection = new SqlConnection(connectionString);
-
-            try
-            {
-                sqlConnection.Open();
-
-                string query = "SELECT * FROM dbo.winforms order by id desc";
-
-                DataTable dadosTabela = new DataTable();
-
-                using (SqlCommand cmd = new SqlCommand(query, sqlConnection))
-                {
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                    adapter.Fill(dadosTabela);
-                }
-
-
-                dataGridView1.DataSource = dadosTabela;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-            }
-            finally
-            {
-                sqlConnection.Close();
-            }
-        }
-
         private void ExportarCSVbtn_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
@@ -173,13 +134,110 @@ namespace WinFormsApp1
             }
         }
 
+        private Task AtualizaValorFlag(int id, bool newValue)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand(AtualizaDadosTabelaBlock(), conn))
+                {
+                    cmd.Parameters.AddWithValue("@NewValue", newValue);
+                    cmd.Parameters.AddWithValue("ID", id);
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
+            return Task.CompletedTask;
+        }
+
+        private async void dataGridView1_CellValueChangedAsync(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                if (dataGridView1.Columns[e.ColumnIndex].Name == "Flag")
+                {
+                    bool newValue = (bool)dataGridView1.Rows[e.RowIndex].Cells["Flag"].Value;
+
+                    int id = (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value;
+                    await AtualizaValorFlag(id, newValue);
+                }
+            }
+        }
+
         private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentCell is DataGridViewCheckBoxCell)
             {
-                ; dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }
+
+
+
+
+        public string InserirNovaLinha(string novoId, string novoData, bool novoFlag)
+        {
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand(InserirTabelaBloqueados(), conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@Id", novoId);
+                    cmd.Parameters.AddWithValue("@Data", novoData);
+                    cmd.Parameters.AddWithValue("@Flag", novoFlag);
+                    cmd.ExecuteNonQuery();
+
+                }
+
+                conn.Close();
+            }
+
+            return "ok";
+
+
+        }
+
+        private string AtualizaDadosTabelaBlock()
+        {
+            string query = $@"UPDATE [dbo].[winforms]
+                           SET 
+                           [flag] = @NewValue
+                             WHERE id = @ID";
+
+            return query;
+        }
+        private string InserirTabelaBloqueados()
+        {
+            string query = $@"INSERT INTO dbo.winforms (ID, DATA, FLAG) 
+                            VALUES 
+                            (
+                              @Id
+                            , @Data
+                            , @Flag
+                             )";
+
+            return query;
+        }
+
+        private void AdicionarBlock_btn_Click(object sender, EventArgs e)
+        {
+            using (frmPopup formPopup = new frmPopup())
+            {
+                DialogResult result = formPopup.ShowDialog();
+                if (formPopup.DialogResult != DialogResult.None)
+                {
+                    CarregarDadosAsync();
+                } 
+            }
+
+            return;
+        }
+
+
         //private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         //{
         //    if (dataGridView1.Columns[e.ColumnIndex].Name == "Flag")
