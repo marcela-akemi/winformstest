@@ -61,10 +61,17 @@ namespace WinFormsApp1
 
         private void btnPesquisar_Click(object sender, EventArgs e)
         {
-            string selectedRegra = cboRegra.SelectedItem.ToString();
-            string selectedCarteira = cboCarteira.SelectedItem.ToString();
+            string regra = cboRegra.SelectedItem.ToString();
+            char selectedRegra = regra[0];
+            string carteira = cboCarteira.SelectedItem.ToString();
+            char selectedCarteira = carteira[0];
 
+            string query = $"SELECT * FROM TB_POLITICA WHERE ID_REGRA = '{selectedRegra}' AND ID_CARTEIRA = '{selectedCarteira}'";
+            da.SelectCommand.CommandText = query;
+            ds.Clear();
+            da.Fill(ds, "TB_POLITICA");
 
+            dataGridView1.DataSource = ds.Tables["TB_POLITICA"];
 
         }
     }
