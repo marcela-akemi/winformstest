@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WinFormsApp1
 {
@@ -95,6 +96,31 @@ namespace WinFormsApp1
             da.Fill(ds, "TB_POLITICA");
 
             dataGridView1.DataSource = ds.Tables["TB_POLITICA"];
+
+        }
+
+        private void btnSalvar_Click(object sender, EventArgs e)
+        {
+
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                int selectedIndex = dataGridView1.SelectedRows[0].Index;
+                dataTable.Rows[selectedIndex]["ID"] = textBoxID.Text;
+                dataTable.Rows[selectedIndex]["Name"] = textBoxName.Text;
+
+                string connectionString = "Data Source=YOUR_DATA_SOURCE;Initial Catalog=YOUR_DATABASE;Integrated Security=True";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string updateQuery = "UPDATE YourTable SET ID = @ID, Name = @Name WHERE ID = @OriginalID";
+                    SqlCommand command = new SqlCommand(updateQuery, connection);
+                    command.Parameters.AddWithValue("@ID", textBoxID.Text);
+                    command.Parameters.AddWithValue("@Name", textBoxName.Text);
+                    command.Parameters.AddWithValue("@OriginalID", dataGridView1.Rows[selectedIndex].Cells["ID"].Value.ToString());
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
 
         }
     }

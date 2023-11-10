@@ -42,6 +42,10 @@
             btnPesquisar = new Button();
             labelRegra = new Label();
             labelCarteira = new Label();
+            textBoxRegra = new TextBox();
+            textBoxCarteira = new TextBox();
+            cboEditCarteira = new ComboBox();
+            btnSalvar = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -148,11 +152,47 @@
             labelCarteira.TabIndex = 7;
             labelCarteira.Text = "Carteira";
             // 
+            // textBoxRegra
+            // 
+            textBoxRegra.Location = new Point(97, 107);
+            textBoxRegra.Name = "textBoxRegra";
+            textBoxRegra.Size = new Size(155, 27);
+            textBoxRegra.TabIndex = 8;
+            // 
+            // textBoxCarteira
+            // 
+            textBoxCarteira.Location = new Point(97, 140);
+            textBoxCarteira.Name = "textBoxCarteira";
+            textBoxCarteira.Size = new Size(156, 27);
+            textBoxCarteira.TabIndex = 9;
+            // 
+            // cboEditCarteira
+            // 
+            cboEditCarteira.FormattingEnabled = true;
+            cboEditCarteira.Location = new Point(266, 107);
+            cboEditCarteira.Name = "cboEditCarteira";
+            cboEditCarteira.Size = new Size(151, 28);
+            cboEditCarteira.TabIndex = 10;
+            // 
+            // btnSalvar
+            // 
+            btnSalvar.Location = new Point(629, 107);
+            btnSalvar.Name = "btnSalvar";
+            btnSalvar.Size = new Size(103, 35);
+            btnSalvar.TabIndex = 11;
+            btnSalvar.Text = "Salvar";
+            btnSalvar.UseVisualStyleBackColor = true;
+            btnSalvar.Click += btnSalvar_Click;
+            // 
             // frmDropdown
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnSalvar);
+            Controls.Add(cboEditCarteira);
+            Controls.Add(textBoxCarteira);
+            Controls.Add(textBoxRegra);
             Controls.Add(labelCarteira);
             Controls.Add(labelRegra);
             Controls.Add(btnPesquisar);
@@ -182,5 +222,9 @@
         private DataGridViewTextBoxColumn idCarteira;
         private DataGridViewTextBoxColumn dsPolitica;
         private DataGridViewTextBoxColumn dtInclusao;
+        private TextBox textBoxRegra;
+        private TextBox textBoxCarteira;
+        private ComboBox cboEditCarteira;
+        private Button btnSalvar;
     }
 }
