@@ -30,22 +30,67 @@
         {
             components = new System.ComponentModel.Container();
             dataGridView1 = new DataGridView();
+            idPolitica = new DataGridViewTextBoxColumn();
+            idRegra = new DataGridViewTextBoxColumn();
+            idCarteira = new DataGridViewTextBoxColumn();
+            dsPolitica = new DataGridViewTextBoxColumn();
+            dtInclusao = new DataGridViewTextBoxColumn();
             contextMenuStrip1 = new ContextMenuStrip(components);
             contextMenuStrip2 = new ContextMenuStrip(components);
             cboRegra = new ComboBox();
             cboCarteira = new ComboBox();
             btnPesquisar = new Button();
+            labelRegra = new Label();
+            labelCarteira = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
             // 
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { idPolitica, idRegra, idCarteira, dsPolitica, dtInclusao });
             dataGridView1.Location = new Point(12, 181);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.RowHeadersWidth = 100;
             dataGridView1.RowTemplate.Height = 29;
             dataGridView1.Size = new Size(776, 257);
             dataGridView1.TabIndex = 0;
+            // 
+            // idPolitica
+            // 
+            idPolitica.DataPropertyName = "ID_POLITICA";
+            idPolitica.HeaderText = "ID Politica";
+            idPolitica.Name = "idPolitica";
+            // 
+            // idRegra
+            // 
+            idRegra.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            idRegra.DataPropertyName = "ID_REGRA";
+            idRegra.HeaderText = "ID Regra";
+            idRegra.Name = "idRegra";
+            // 
+            // idCarteira
+            // 
+            idCarteira.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            idCarteira.DataPropertyName = "ID_CARTEIRA";
+            idCarteira.HeaderText = "ID Carteira";
+            idCarteira.Name = "idCarteira";
+            // 
+            // dsPolitica
+            // 
+            dsPolitica.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dsPolitica.DataPropertyName = "DS_POLITICA";
+            dsPolitica.HeaderText = "Politica";
+            dsPolitica.Name = "dsPolitica";
+            // 
+            // dtInclusao
+            // 
+            dtInclusao.DataPropertyName = "DT_INCLUSAO";
+            dtInclusao.HeaderText = "Data Inclusao";
+            dtInclusao.Name = "dtInclusao";
             // 
             // contextMenuStrip1
             // 
@@ -70,26 +115,46 @@
             // 
             cboCarteira.DropDownStyle = ComboBoxStyle.DropDownList;
             cboCarteira.FormattingEnabled = true;
-            cboCarteira.Location = new Point(97, 90);
+            cboCarteira.Location = new Point(393, 41);
             cboCarteira.Name = "cboCarteira";
             cboCarteira.Size = new Size(194, 28);
             cboCarteira.TabIndex = 4;
             // 
             // btnPesquisar
             // 
-            btnPesquisar.Location = new Point(422, 62);
+            btnPesquisar.Location = new Point(629, 38);
             btnPesquisar.Name = "btnPesquisar";
-            btnPesquisar.Size = new Size(117, 39);
+            btnPesquisar.Size = new Size(117, 33);
             btnPesquisar.TabIndex = 5;
             btnPesquisar.Text = "Pesquisar";
             btnPesquisar.UseVisualStyleBackColor = true;
             btnPesquisar.Click += btnPesquisar_Click;
+            // 
+            // labelRegra
+            // 
+            labelRegra.AutoSize = true;
+            labelRegra.Location = new Point(43, 44);
+            labelRegra.Name = "labelRegra";
+            labelRegra.Size = new Size(48, 20);
+            labelRegra.TabIndex = 6;
+            labelRegra.Text = "Regra";
+            // 
+            // labelCarteira
+            // 
+            labelCarteira.AutoSize = true;
+            labelCarteira.Location = new Point(326, 44);
+            labelCarteira.Name = "labelCarteira";
+            labelCarteira.Size = new Size(61, 20);
+            labelCarteira.TabIndex = 7;
+            labelCarteira.Text = "Carteira";
             // 
             // frmDropdown
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(labelCarteira);
+            Controls.Add(labelRegra);
             Controls.Add(btnPesquisar);
             Controls.Add(cboCarteira);
             Controls.Add(cboRegra);
@@ -99,6 +164,7 @@
             Load += frmDropdown_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -109,5 +175,12 @@
         private ComboBox cboRegra;
         private ComboBox cboCarteira;
         private Button btnPesquisar;
+        private Label labelRegra;
+        private Label labelCarteira;
+        private DataGridViewTextBoxColumn idPolitica;
+        private DataGridViewTextBoxColumn idRegra;
+        private DataGridViewTextBoxColumn idCarteira;
+        private DataGridViewTextBoxColumn dsPolitica;
+        private DataGridViewTextBoxColumn dtInclusao;
     }
 }

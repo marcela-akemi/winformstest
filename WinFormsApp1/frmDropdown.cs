@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -59,12 +60,34 @@ namespace WinFormsApp1
             }
         }
 
+        public int extractNumber(string comboValue)
+        {
+            string numberPattern = @"\b\d{1,3}\b";
+
+            Match match = Regex.Match(comboValue, numberPattern);
+            if (match.Success)
+            {
+
+                string numberString = match.Value;
+                int number = int.Parse(numberString);
+
+                return number;
+            }
+            else
+            {
+                MessageBox.Show("No nubmer found");
+                return -1;
+            }
+
+
+        }
+
         private void btnPesquisar_Click(object sender, EventArgs e)
         {
             string regra = cboRegra.SelectedItem.ToString();
-            char selectedRegra = regra[0];
+            int selectedRegra = extractNumber(regra);
             string carteira = cboCarteira.SelectedItem.ToString();
-            char selectedCarteira = carteira[0];
+            int selectedCarteira = extractNumber(carteira);
 
             string query = $"SELECT * FROM TB_POLITICA WHERE ID_REGRA = '{selectedRegra}' AND ID_CARTEIRA = '{selectedCarteira}'";
             da.SelectCommand.CommandText = query;
