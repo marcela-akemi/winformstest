@@ -11,22 +11,86 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace WinFormsApp1
 {
     public partial class frmDropdown : Form
     {
         private SqlConnection cnn;
-        private SqlDataAdapter da;
-        private DataSet ds;
+
+        private SqlConnection connection;
+        private SqlDataAdapter dataAdapter;
+        private DataSet dataSet;
+        private int pageSize = 5;
+        private int currentPage = 1;
+        private int totalRows;
+
         public frmDropdown()
         {
-            InitializeComponent();
 
             cnn = new SqlConnection("Server=DESKTOP-BLATUSV\\SQLEXPRESS;Database=db1; Integrated Security = True");
-            ds = new DataSet();
+          
+            InitializeComponent();
+            InitializeDataGridView();
+            LoadData();
+
         }
 
+        private void LoadData()
+        {
+            UpdateDataGridView("TB_POLITICAS");
+        }
+
+        private void InitializeDataGridView()
+        {
+            try
+            {
+
+                dataAdapter = new SqlDataAdapter(queryLoad(), cnn);
+                dataSet = new DataSet();
+                dataAdapter.Fill(dataSet, "TB_POLITICAS");
+
+                totalRows = dataSet.Tables["TB_POLITICAS"].Rows.Count;
+
+                UpdateDataGridView("TB_POLITICAS");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        
+
+        private void UpdateDataGridView(string tableName)
+        {
+            int startIndex = (currentPage - 1) * pageSize;
+            int endIndex = Math.Min(startIndex + pageSize, totalRows);
+
+            DataTable pageTable = dataSet.Tables[tableName].Clone();
+
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                pageTable.ImportRow(dataSet.Tables[tableName].Rows[i]);
+            }
+
+            dataGridView1.DataSource = pageTable;
+
+            UpdateNavigationButtons();
+        }
+
+        private void UpdateNavigationButtons()
+        {
+            btnPrevious.Enabled = currentPage > 1;
+            btnNext.Enabled = currentPage < totalRows / pageSize;
+        }
+
+        public string queryLoad()
+        {
+            string query = "SELECT * FROM TB_POLITICAS";
+            return query;
+        }
         private void frmDropdown_Load(object sender, EventArgs e)
         {
             string query = "SELECT id_regra, ds_regra FROM TB_REGRAS";
@@ -41,13 +105,13 @@ namespace WinFormsApp1
         {
             try
             {
-                da = new SqlDataAdapter(query, cnn);
-                ds = new DataSet(tableName);
-                da.Fill(ds, tableName);
+                dataAdapter = new SqlDataAdapter(query, cnn);
+                dataSet = new DataSet(tableName);
+                dataAdapter.Fill(dataSet, tableName);
 
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                 {
-                    comboBox.Items.Add(ds.Tables[0].Rows[i][0] + " " + ds.Tables[0].Rows[i][1]);
+                    comboBox.Items.Add(dataSet.Tables[0].Rows[i][0] + " " + dataSet.Tables[0].Rows[i][1]);
                 }
 
 
@@ -89,39 +153,85 @@ namespace WinFormsApp1
             int selectedRegra = extractNumber(regra);
             string carteira = cboCarteira.SelectedItem.ToString();
             int selectedCarteira = extractNumber(carteira);
+            string query = $"SELECT * FROM TB_POLITICAS WHERE ID_REGRA = '{selectedRegra}' AND ID_CARTEIRA = '{selectedCarteira}'";
 
-            string query = $"SELECT * FROM TB_POLITICA WHERE ID_REGRA = '{selectedRegra}' AND ID_CARTEIRA = '{selectedCarteira}'";
-            da.SelectCommand.CommandText = query;
-            ds.Clear();
-            da.Fill(ds, "TB_POLITICA");
+            PerformSearch(query);
 
-            dataGridView1.DataSource = ds.Tables["TB_POLITICA"];
+
+            //dataGridView1.DataSource = dataSet.Tables["TB_POLITICAS_SEARCH_QUERY"];
 
         }
 
-        private void btnSalvar_Click(object sender, EventArgs e)
+        private void PerformSearch(string query)
         {
+            
+            dataAdapter.SelectCommand.CommandText = query;
+            dataSet.Clear();
+            dataAdapter.Fill(dataSet, "TB_POLITICAS_SEARCH_QUERY");
 
-            if (dataGridView1.SelectedRows.Count > 0)
+            totalRows = dataSet.Tables["TB_POLITICAS_SEARCH_QUERY"].Rows.Count;
+
+            currentPage = 1;
+            UpdateDataGridView("TB_POLITICAS_SEARCH_QUERY");
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
             {
-                int selectedIndex = dataGridView1.SelectedRows[0].Index;
-                dataTable.Rows[selectedIndex]["ID"] = textBoxID.Text;
-                dataTable.Rows[selectedIndex]["Name"] = textBoxName.Text;
+                DataGridViewRow selectedRow = dataGridView1.Rows[e.RowIndex];
 
-                string connectionString = "Data Source=YOUR_DATA_SOURCE;Initial Catalog=YOUR_DATABASE;Integrated Security=True";
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string updateQuery = "UPDATE YourTable SET ID = @ID, Name = @Name WHERE ID = @OriginalID";
-                    SqlCommand command = new SqlCommand(updateQuery, connection);
-                    command.Parameters.AddWithValue("@ID", textBoxID.Text);
-                    command.Parameters.AddWithValue("@Name", textBoxName.Text);
-                    command.Parameters.AddWithValue("@OriginalID", dataGridView1.Rows[selectedIndex].Cells["ID"].Value.ToString());
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                }
+                cboRegraEdit.Text = selectedRow.Cells[1].Value.ToString();
+                cboEditCarteira.Text = selectedRow.Cells[2].Value.ToString();
+
             }
+        }
 
+        private void btnDeletar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int rowIndex = dataGridView1.CurrentCell.RowIndex;
+                dataGridView1.Rows.RemoveAt(rowIndex);
+
+                SqlCommandBuilder builder = new SqlCommandBuilder(dataAdapter);
+                dataAdapter.Update(dataSet, "TB_POLITICAS");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnNovo_Click(object sender, EventArgs e)
+        {
+            ClearFields();
+        }
+
+        private void ClearFields()
+        {
+            cboRegra.SelectedIndex = -1;
+            cboCarteira.SelectedIndex = -1;
+            dataGridView1.ClearSelection();
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            if (currentPage < totalRows / pageSize)
+            {
+                currentPage++;
+                UpdateDataGridView(dataGridView1.DataSource.ToString());
+            }
+        }
+
+        private void btnPrevious_Click(object sender, EventArgs e)
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                UpdateDataGridView(dataGridView1.DataSource.ToString());
+            }
         }
     }
 }

@@ -42,10 +42,13 @@
             btnPesquisar = new Button();
             labelRegra = new Label();
             labelCarteira = new Label();
-            textBoxRegra = new TextBox();
-            textBoxCarteira = new TextBox();
             cboEditCarteira = new ComboBox();
             btnSalvar = new Button();
+            btnNovo = new Button();
+            btnDeletar = new Button();
+            cboRegraEdit = new ComboBox();
+            btnPrevious = new Button();
+            btnNext = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -54,14 +57,15 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { idPolitica, idRegra, idCarteira, dsPolitica, dtInclusao });
-            dataGridView1.Location = new Point(12, 181);
+            dataGridView1.Location = new Point(12, 259);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 100;
             dataGridView1.RowTemplate.Height = 29;
-            dataGridView1.Size = new Size(776, 257);
+            dataGridView1.Size = new Size(953, 262);
             dataGridView1.TabIndex = 0;
+            dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             // 
             // idPolitica
             // 
@@ -152,47 +156,84 @@
             labelCarteira.TabIndex = 7;
             labelCarteira.Text = "Carteira";
             // 
-            // textBoxRegra
-            // 
-            textBoxRegra.Location = new Point(97, 107);
-            textBoxRegra.Name = "textBoxRegra";
-            textBoxRegra.Size = new Size(155, 27);
-            textBoxRegra.TabIndex = 8;
-            // 
-            // textBoxCarteira
-            // 
-            textBoxCarteira.Location = new Point(97, 140);
-            textBoxCarteira.Name = "textBoxCarteira";
-            textBoxCarteira.Size = new Size(156, 27);
-            textBoxCarteira.TabIndex = 9;
-            // 
             // cboEditCarteira
             // 
             cboEditCarteira.FormattingEnabled = true;
-            cboEditCarteira.Location = new Point(266, 107);
+            cboEditCarteira.Location = new Point(393, 114);
             cboEditCarteira.Name = "cboEditCarteira";
-            cboEditCarteira.Size = new Size(151, 28);
+            cboEditCarteira.Size = new Size(194, 28);
             cboEditCarteira.TabIndex = 10;
             // 
             // btnSalvar
             // 
-            btnSalvar.Location = new Point(629, 107);
+            btnSalvar.Location = new Point(837, 107);
             btnSalvar.Name = "btnSalvar";
             btnSalvar.Size = new Size(103, 35);
             btnSalvar.TabIndex = 11;
             btnSalvar.Text = "Salvar";
             btnSalvar.UseVisualStyleBackColor = true;
-            btnSalvar.Click += btnSalvar_Click;
+            // 
+            // btnNovo
+            // 
+            btnNovo.ImageAlign = ContentAlignment.BottomRight;
+            btnNovo.Location = new Point(837, 148);
+            btnNovo.Name = "btnNovo";
+            btnNovo.Size = new Size(103, 35);
+            btnNovo.TabIndex = 12;
+            btnNovo.Text = "Novo";
+            btnNovo.UseVisualStyleBackColor = true;
+            btnNovo.Click += btnNovo_Click;
+            // 
+            // btnDeletar
+            // 
+            btnDeletar.Location = new Point(837, 189);
+            btnDeletar.Name = "btnDeletar";
+            btnDeletar.Size = new Size(103, 35);
+            btnDeletar.TabIndex = 13;
+            btnDeletar.Text = "Deletar";
+            btnDeletar.UseVisualStyleBackColor = true;
+            btnDeletar.Click += btnDeletar_Click;
+            // 
+            // cboRegraEdit
+            // 
+            cboRegraEdit.FormattingEnabled = true;
+            cboRegraEdit.Location = new Point(97, 114);
+            cboRegraEdit.Name = "cboRegraEdit";
+            cboRegraEdit.Size = new Size(194, 28);
+            cboRegraEdit.TabIndex = 14;
+            // 
+            // btnPrevious
+            // 
+            btnPrevious.Location = new Point(800, 527);
+            btnPrevious.Name = "btnPrevious";
+            btnPrevious.Size = new Size(75, 31);
+            btnPrevious.TabIndex = 15;
+            btnPrevious.Text = "<<";
+            btnPrevious.UseVisualStyleBackColor = true;
+            btnPrevious.Click += btnPrevious_Click;
+            // 
+            // btnNext
+            // 
+            btnNext.Location = new Point(881, 527);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(75, 31);
+            btnNext.TabIndex = 16;
+            btnNext.Text = ">>";
+            btnNext.UseVisualStyleBackColor = true;
+            btnNext.Click += btnNext_Click;
             // 
             // frmDropdown
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(977, 567);
+            Controls.Add(btnNext);
+            Controls.Add(btnPrevious);
+            Controls.Add(cboRegraEdit);
+            Controls.Add(btnDeletar);
+            Controls.Add(btnNovo);
             Controls.Add(btnSalvar);
             Controls.Add(cboEditCarteira);
-            Controls.Add(textBoxCarteira);
-            Controls.Add(textBoxRegra);
             Controls.Add(labelCarteira);
             Controls.Add(labelRegra);
             Controls.Add(btnPesquisar);
@@ -222,9 +263,13 @@
         private DataGridViewTextBoxColumn idCarteira;
         private DataGridViewTextBoxColumn dsPolitica;
         private DataGridViewTextBoxColumn dtInclusao;
-        private TextBox textBoxRegra;
-        private TextBox textBoxCarteira;
         private ComboBox cboEditCarteira;
         private Button btnSalvar;
+        private Button btnNovo;
+        private Button btnDeletar;
+        private ComboBox comboBox1;
+        private ComboBox cboRegraEdit;
+        private Button btnPrevious;
+        private Button btnNext;
     }
 }
