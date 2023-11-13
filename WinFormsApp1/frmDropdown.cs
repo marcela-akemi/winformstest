@@ -105,13 +105,13 @@ namespace WinFormsApp1
         {
             try
             {
-                dataAdapter = new SqlDataAdapter(query, cnn);
-                dataSet = new DataSet(tableName);
-                dataAdapter.Fill(dataSet, tableName);
+                SqlDataAdapter dataAdapterCbo = new SqlDataAdapter(query, cnn);
+                DataSet dataSetCbo = new DataSet(tableName);
+                dataAdapterCbo.Fill(dataSetCbo, tableName);
 
-                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                for (int i = 0; i < dataSetCbo.Tables[0].Rows.Count; i++)
                 {
-                    comboBox.Items.Add(dataSet.Tables[0].Rows[i][0] + " " + dataSet.Tables[0].Rows[i][1]);
+                    comboBox.Items.Add(dataSetCbo.Tables[0].Rows[i][0] + " " + dataSetCbo.Tables[0].Rows[i][1]);
                 }
 
 
